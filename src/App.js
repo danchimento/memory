@@ -1,12 +1,11 @@
-import logo from './logo.svg';
 import './App.css';
-import React, { Component, useState } from 'react';
+import React from 'react';
 
 function shuffle(array) {
   let currentIndex = array.length, randomIndex;
 
   // While there remain elements to shuffle...
-  while (currentIndex != 0) {
+  while (currentIndex !== 0) {
 
     // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
@@ -30,35 +29,38 @@ class App extends React.Component {
   onLetterSelected(letter) {
     if (this.currentLetter >= this.wordLength) return;
 
-    this.state.guesses[this.currentGuess][this.currentLetter++].letter = letter;
+    var guesses = [...this.state.guesses];
+    guesses[this.currentGuess][this.currentLetter++].letter = letter;
     this.setState({
-      guesses: this.state.guesses
+      guesses: guesses
     })
   }
 
   onClear() {
     for (var i =0; i < this.wordLength;i++) {
-      this.state.guesses[this.currentGuess][i].letter = ''
+      var guesses = [...this.state.guesses];
+      guesses[this.currentGuess][i].letter = ''
     }
 
-    this.setState({ guesses: this.state.guesses });
+    this.setState({ guesses: guesses });
     this.currentLetter = 0;
   }
   
   onSubmit() {
     if (this.currentLetter < this.wordLength) return;
 
+    var guesses = [...this.state.guesses]
     for (var i = 0; i < this.wordLength; i++) {
-      if (this.state.guesses[this.currentGuess][i].letter == this.word[i]) {
-        this.state.guesses[this.currentGuess][i].state = 'GREEN'
+      if (this.state.guesses[this.currentGuess][i].letter === this.word[i]) {
+        guesses[this.currentGuess][i].state = 'GREEN'
       } else if (this.word.includes(this.state.guesses[this.currentGuess][i].letter)) {
-        this.state.guesses[this.currentGuess][i].state = 'YELLOW'
+        guesses[this.currentGuess][i].state = 'YELLOW'
       } else {
-        this.state.guesses[this.currentGuess][i].state = 'BLACK'
+        guesses[this.currentGuess][i].state = 'BLACK'
       }
     }
 
-    this.setState({ guesses: this.state.guesses });
+    this.setState({ guesses: guesses });
 
     this.currentGuess++;
     this.currentLetter = 0;
@@ -103,7 +105,7 @@ class App extends React.Component {
       this.word[i] = this.set[randomIndex];
     }
 
-    for (var i = 0; i < this.maxGuesses; i++) {
+    for (i = 0; i < this.maxGuesses; i++) {
       var guess = [];
       for (var j = 0; j < this.wordLength; j++) {
         guess.push({ letter: '', state: null })
